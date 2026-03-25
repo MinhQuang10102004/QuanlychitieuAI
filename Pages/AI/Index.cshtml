@@ -1,0 +1,49 @@
+@page
+@model QuanLyChiTieu.Pages.AI.IndexModel
+@{
+    ViewData["Title"] = "Trợ lý AI";
+}
+
+<link rel="stylesheet" href="~/css/ai-chat.css" />
+
+<div class="container-fluid ai-fullpage" data-ai-chat-root data-ai-chat-page>
+    <div class="row w-100 justify-content-center">
+        <div class="col-12 col-xl-10">
+            <h1 class="h3 mb-4">Trợ lý AI</h1>
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <div id="ai-panel" class="ai-panel" style="display:flex;">
+                        <div class="ai-panel-header">
+                            <div class="d-flex align-items-center">
+                                <div class="ai-title me-3">Trợ lý AI</div>
+                                <small class="text-muted">Hỏi về chi tiêu, ngân sách, hoặc yêu cầu phân tích.</small>
+                            </div>
+                            <div class="ai-actions">
+                                <button id="ai-export" class="btn btn-sm btn-outline-secondary me-2">Export</button>
+                                <button id="ai-close" class="btn btn-sm btn-outline-secondary" title="Đóng">Đóng</button>
+                            </div>
+                        </div>
+
+                        <div id="ai-conversation" class="ai-conversation"></div>
+
+                        <div class="ai-input-area">
+                            <textarea id="ai-input" class="form-control" rows="2" placeholder="Gõ tin nhắn... (Shift+Enter xuống dòng)"></textarea>
+                            <div class="ai-input-actions">
+                                <button id="ai-send" class="btn btn-primary">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 text-muted small">
+                Tip: bạn có thể nhấn vào tin nhắn AI để sao chép, hoặc nhấn Export để tải lịch sử.
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

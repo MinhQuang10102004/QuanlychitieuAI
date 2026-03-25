@@ -1,0 +1,41 @@
+@page
+@model QuanLyChiTieu.Pages.Households.BudgetRequestsModel
+@{
+    ViewData["Title"] = "Yêu cầu thay đổi ngân sách";
+}
+
+<h1 class="h3 mb-4">Yêu cầu thay đổi ngân sách</h1>
+
+@if (Model.Requests == null || !Model.Requests.Any())
+{
+    <div class="alert alert-info">Không có yêu cầu nào đang chờ.</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr><th>Budget</th><th>Requester</th><th>Proposed</th><th>Created</th><th></th></tr>
+        </thead>
+        <tbody>
+        @foreach (var r in Model.Requests)
+        {
+            <tr>
+                <td>@r.BudgetId</td>
+                <td>@r.RequesterId</td>
+                <td>@r.ProposedAmount.ToString("N0") (@r.ProposedStatus)</td>
+                <td>@r.CreatedAt.ToLocalTime()</td>
+                <td>
+                    <form method="post" asp-page-handler="Approve">
+                        <input type="hidden" name="id" value="@r.Id" />
+                        <button class="btn btn-sm btn-success">Duyệt</button>
+                    </form>
+                    <form method="post" asp-page-handler="Reject" class="d-inline ms-2">
+                        <input type="hidden" name="id" value="@r.Id" />
+                        <button class="btn btn-sm btn-danger">Từ chối</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

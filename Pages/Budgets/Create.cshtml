@@ -1,0 +1,32 @@
+@page
+@model QuanLyChiTieu.Pages.Budgets.CreateModel
+@{
+    ViewData["Title"] = "Tạo ngân sách thủ công";
+}
+
+<h1 class="h3 mb-4">Tạo ngân sách thủ công</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Tên ngân sách</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Amount" class="form-label">Số tiền (VND)</label>
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Start" class="form-label">Ngày bắt đầu</label>
+        <input asp-for="Start" type="date" class="form-control" />
+        <span asp-validation-for="Start" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="End" class="form-label">Ngày kết thúc</label>
+        <input asp-for="End" type="date" class="form-control" />
+        <span asp-validation-for="End" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Tạo</button>
+    <a asp-page="Index" class="btn btn-link">Hủy</a>
+</form>

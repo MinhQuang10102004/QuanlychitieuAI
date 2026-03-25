@@ -1,0 +1,61 @@
+@page
+@model QuanLyChiTieu.Pages.IndexModel
+@{
+    ViewData["Title"] = "Tổng quan";
+}
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card text-bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Tổng chi tiêu tháng @Model.TargetMonth.ToString("MM/yyyy")</h5>
+                <p class="display-6">@Model.TotalSpent.ToString("N0") đ</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card text-bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Số giao dịch</h5>
+                <p class="display-6">@Model.TransactionCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card text-bg-secondary">
+            <div class="card-body">
+                <h5 class="card-title">Danh mục phổ biến</h5>
+                <p class="card-text">@Model.TopCategory</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="mt-4">
+    <h2 class="h4">Giao dịch gần đây</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ngày</th>
+                    <th>Danh mục</th>
+                    <th>Người dùng</th>
+                    <th class="text-end">Số tiền</th>
+                    <th>Mô tả</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.LatestTransactions)
+            {
+                <tr>
+                    <td>@item.NgayGiaoDich.ToString("dd/MM/yyyy")</td>
+                    <td>@item.DanhMuc?.TenDanhMuc</td>
+                    <td>@item.NguoiDung?.HoTen</td>
+                    <td class="text-end">@item.SoTien.ToString("N0") đ</td>
+                    <td>@item.MoTa</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

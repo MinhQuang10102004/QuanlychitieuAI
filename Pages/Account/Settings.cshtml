@@ -1,0 +1,106 @@
+@page
+@model QuanLyChiTieu.Pages.Account.SettingsModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
+
+<h2>Cài đặt tài khoản</h2>
+
+<div>
+    <p>Xin chào, @Model.UserName</p>
+
+    <h4>Hộ gia đình hiện tại</h4>
+    @if (Model.Household != null)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Household.TenHoGiaDinh</h5>
+                    <p class="card-text">Chủ hộ: <strong>@(Model.Household.ChuHo?.HoTen ?? "Không rõ")</strong></p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>Bạn chưa thuộc hộ gia đình nào.</p>
+    }
+
+    <h4>Lời mời gửi tới bạn</h4>
+    @if (Model.IncomingInvitations != null && Model.IncomingInvitations.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr><th>Token</th><th>From</th><th>Expires</th><th></th></tr>
+            </thead>
+            <tbody>
+            @foreach (var i in Model.IncomingInvitations)
+            {
+                <tr>
+                    <td>@i.Token</td>
+                    <td>@(Model.InviterNames?.ContainsKey(i.InviterId) == true ? Model.InviterNames[i.InviterId] : "Không rõ")</td>
+                    <td>@i.ExpiresAt.ToLocalTime()</td>
+                    <td>
+                        <form method="post">
+                            <input type="hidden" name="InviteToken" value="@i.Token" />
+                            <button type="submit" asp-page-handler="AcceptInvite" class="btn btn-sm btn-success">Chấp nhận</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Không có lời mời nào gửi tới bạn.</p>
+    }
+
+    <h4>Lời mời bạn đã gửi</h4>
+    @if (Model.SentInvitations != null && Model.SentInvitations.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr><th>Token</th><th>To</th><th>Expires</th><th></th></tr>
+            </thead>
+            <tbody>
+            @foreach (var s in Model.SentInvitations)
+            {
+                <tr>
+                    <td>@s.Token</td>
+                    <td>@(s.Email ?? s.Phone ?? "-")</td>
+                    <td>@s.ExpiresAt.ToLocalTime()</td>
+                    <td>
+                        <form method="post" asp-page-handler="CancelInviteAsync">
+                            <input type="hidden" name="token" value="@s.Token" />
+                            <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Bạn chưa gửi lời mời nào.</p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+        <div class="alert alert-info mt-3">@Model.Message</div>
+    }
+
+    @if (Env.IsDevelopment())
+    {
+        <div class="row g-4 mt-4">
+            <div class="col-12">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5">Developer tools</h2>
+                        <p class="text-muted">Công cụ dành cho phát triển: dọn các tin nhắn lỗi đã lưu bởi trợ lý AI.</p>
+                        <form method="post" asp-page-handler="CleanupAiErrors" onsubmit="return confirm('Bạn chắc chắn muốn xoá các bản ghi lỗi của AI không?');">
+                            <button type="submit" class="btn btn-danger">Xoá lịch sử lỗi AI</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

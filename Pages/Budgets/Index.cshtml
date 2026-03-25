@@ -1,0 +1,46 @@
+@page
+@model QuanLyChiTieu.Pages.Budgets.IndexModel
+@{
+    ViewData["Title"] = "Ngân sách";
+}
+
+<h1 class="h3 mb-4">Ngân sách của bạn</h1>
+
+<p>
+    <a asp-page="CreateBySalary" class="btn btn-primary">Tạo theo lương</a>
+    <a asp-page="Create" class="btn btn-outline-primary ms-2">Tạo thủ công</a>
+</p>
+
+@if (Model.Budgets == null || !Model.Budgets.Any())
+{
+    <div class="alert alert-secondary">Chưa có ngân sách nào.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tên</th>
+                <th>Số tiền</th>
+                <th>Khoảng</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model.Budgets)
+            {
+                <tr>
+                    <td>@b.TenBudget</td>
+                    <td>@b.SoTien.ToString("N0") VND</td>
+                    <td>@b.ThoiGianBatDau.ToString("dd/MM/yyyy") - @b.ThoiGianKetThuc.ToString("dd/MM/yyyy")</td>
+                    <td>@b.TinhTrang</td>
+                    <td>
+                        <a asp-page="Details" asp-route-id="@b.BudgetId" class="btn btn-sm btn-outline-secondary">Xem</a>
+                        <a asp-page="Edit" asp-route-id="@b.BudgetId" class="btn btn-sm btn-outline-primary ms-1">Sửa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,43 @@
+@page "{id:int}"
+@model QuanLyChiTieu.Pages.Transactions.EditModel
+@{
+    ViewData["Title"] = "Cập nhật giao dịch";
+}
+
+<h1 class="h3 mb-3">Cập nhật giao dịch</h1>
+
+<form method="post" class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Input.MaNguoiDung" class="form-label">Người dùng</label>
+        <select asp-for="Input.MaNguoiDung" class="form-select" asp-items="Model.NguoiDungOptions"></select>
+        <span asp-validation-for="Input.MaNguoiDung" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Input.MaDanhMuc" class="form-label">Danh mục</label>
+        <select asp-for="Input.MaDanhMuc" class="form-select" asp-items="Model.DanhMucOptions"></select>
+        <span asp-validation-for="Input.MaDanhMuc" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Input.SoTien" class="form-label">Số tiền</label>
+        <input asp-for="Input.SoTien" class="form-control" />
+        <span asp-validation-for="Input.SoTien" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Input.NgayGiaoDich" class="form-label">Ngày giao dịch</label>
+        <input asp-for="Input.NgayGiaoDich" class="form-control" />
+        <span asp-validation-for="Input.NgayGiaoDich" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Input.MoTa" class="form-label">Mô tả</label>
+        <textarea asp-for="Input.MoTa" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Input.MoTa" class="text-danger"></span>
+    </div>
+    <div class="col-12 d-flex justify-content-between">
+        <a class="btn btn-secondary" asp-page="Index">Quay lại</a>
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

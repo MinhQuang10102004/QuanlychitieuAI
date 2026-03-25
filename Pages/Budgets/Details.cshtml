@@ -1,0 +1,38 @@
+@page "{id:int}"
+@model QuanLyChiTieu.Pages.Budgets.DetailsModel
+@{
+    ViewData["Title"] = "Chi tiết ngân sách";
+}
+
+<h1 class="h3 mb-4">@Model.Budget?.TenBudget</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (Model.Budget == null)
+{
+    <div class="alert alert-danger">Không tìm thấy ngân sách.</div>
+}
+else
+{
+    <dl class="row">
+        <dt class="col-sm-3">Số tiền</dt>
+        <dd class="col-sm-9">@Model.Budget.SoTien.ToString("N0") VND</dd>
+
+        <dt class="col-sm-3">Thời gian</dt>
+        <dd class="col-sm-9">@Model.Budget.ThoiGianBatDau:dd/MM/yyyy - @Model.Budget.ThoiGianKetThuc:dd/MM/yyyy</dd>
+
+        <dt class="col-sm-3">Trạng thái</dt>
+        <dd class="col-sm-9">@Model.Budget.TinhTrang</dd>
+
+        <dt class="col-sm-3">Ngày tạo</dt>
+        <dd class="col-sm-9">@Model.Budget.NgayTao:dd/MM/yyyy HH:mm</dd>
+    </dl>
+
+    <p>
+        <a asp-page="Edit" asp-route-id="@Model.Budget.BudgetId" class="btn btn-primary">Chỉnh sửa</a>
+        <a asp-page="Index" class="btn btn-link">Quay lại</a>
+    </p>
+}

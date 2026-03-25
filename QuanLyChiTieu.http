@@ -1,0 +1,25 @@
+@QuanLyChiTieu_HostAddress = http://localhost:5202
+
+### Đăng nhập để lấy JWT
+
+# @name login
+POST {{QuanLyChiTieu_HostAddress}}/api/nguoidung/dangnhap
+Content-Type: application/json
+
+{
+	"email": "nguyenvana@example.com",
+	"matKhau": "123456"
+}
+
+### Dùng token để gọi API giao dịch (copy token từ bước đăng nhập)
+
+@authToken = {{login.response.body.token}}
+
+GET {{QuanLyChiTieu_HostAddress}}/api/giaodich
+Authorization: Bearer {{authToken}}
+Accept: application/json
+
+GET {{QuanLyChiTieu_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

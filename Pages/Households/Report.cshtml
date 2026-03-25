@@ -1,0 +1,31 @@
+@page
+@model QuanLyChiTieu.Pages.Households.ReportModel
+@{
+    ViewData["Title"] = "Báo cáo hộ gia đình";
+}
+
+<h1 class="h3 mb-4">Báo cáo hộ gia đình</h1>
+
+@if (Model.Report == null || Model.Report.Message != "OK")
+{
+    <div class="alert alert-secondary">Không có báo cáo: @Model.Report?.Message</div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5>@Model.Report.HouseholdName</h5>
+            <p>Tổng thu: @Model.Report.TotalIncome.ToString("N0") VND</p>
+            <p>Tổng chi: @Model.Report.TotalExpense.ToString("N0") VND</p>
+            <p>Tiết kiệm: @Model.Report.Savings.ToString("N0") VND</p>
+
+            <h6>Phân chia theo thành viên</h6>
+            <ul>
+                @foreach (var kv in Model.Report.PerMemberShare)
+                {
+                    <li>@kv.Key: @kv.Value.ToString("N0") VND</li>
+                }
+            </ul>
+        </div>
+    </div>
+}

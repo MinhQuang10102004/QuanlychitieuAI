@@ -1,0 +1,22 @@
+@* Backed up: original bubble moved to _AiChatBubble.cshtml.bak *@
+@using Microsoft.AspNetCore.Http
+@{
+    var userId = Context.Session.GetInt32("UserId");
+}
+@if (userId != null)
+{
+    <div id="ai-chat-bubble-stub" style="position:fixed;right:20px;bottom:20px;z-index:1050;">
+        <button id="ai-bubble-open" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width:56px;height:56px;box-shadow:0 4px 12px rgba(0,0,0,0.15);cursor:pointer;font-size:24px;user-select:none;">🤖</button>
+    </div>
+
+    <script>
+        (function(){
+            const btn = document.getElementById('ai-bubble-open');
+            btn && btn.addEventListener('click', function(){
+                const panel = document.getElementById('ai-panel');
+                if(panel){ panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex'; }
+                const openBtn = document.getElementById('ai-open-btn'); if(openBtn) openBtn.style.display = panel && panel.style.display === 'flex' ? 'none' : 'block';
+            });
+        })();
+    </script>
+}

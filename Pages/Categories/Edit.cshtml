@@ -1,0 +1,20 @@
+@page "{id:int}"
+@model QuanLyChiTieu.Pages.Categories.EditModel
+@{
+    ViewData["Title"] = "Sửa danh mục";
+}
+
+<h1 class="h3 mb-3">Sửa danh mục</h1>
+
+<form method="post" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <label asp-for="DanhMuc.TenDanhMuc" class="form-label"></label>
+        <input asp-for="DanhMuc.TenDanhMuc" class="form-control" />
+        <span asp-validation-for="DanhMuc.TenDanhMuc" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-page="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>
+
+<partial name="_ValidationScriptsPartial" />

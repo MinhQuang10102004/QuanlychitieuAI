@@ -1,0 +1,32 @@
+@page
+@model QuanLyChiTieu.Pages.Budgets.CreateBySalaryModel
+@{
+    ViewData["Title"] = "Tạo ngân sách theo lương";
+}
+
+<h1 class="h3 mb-4">Tạo ngân sách từ lương hàng tháng</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Salary" class="form-label">Lương hàng tháng (VND)</label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Month" class="form-label">Tháng</label>
+        <input asp-for="Month" type="month" class="form-control" />
+        <span asp-validation-for="Month" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Tạo ngân sách</button>
+</form>
+
+@if (Model.CreatedBudgets != null && Model.CreatedBudgets.Any())
+{
+    <h5 class="mt-4">Ngân sách đã tạo:</h5>
+    <ul class="list-group mt-2">
+        @foreach (var b in Model.CreatedBudgets)
+        {
+            <li class="list-group-item">@b.TenBudget - @b.SoTien.ToString("N0") VND</li>
+        }
+    </ul>
+}

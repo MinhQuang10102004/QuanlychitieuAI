@@ -1,0 +1,36 @@
+@page "{id:int}"
+@model QuanLyChiTieu.Pages.Budgets.EditModel
+@{
+    ViewData["Title"] = "Chỉnh sửa ngân sách";
+}
+
+<h1 class="h3 mb-4">Chỉnh sửa ngân sách</h1>
+
+@if (Model.Budget == null)
+{
+    <div class="alert alert-danger">Không tìm thấy ngân sách.</div>
+}
+else
+{
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Tên</label>
+            <input class="form-control" value="@Model.Budget.TenBudget" disabled />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Amount" class="form-label">Số tiền</label>
+            <input asp-for="Amount" class="form-control" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label">Trạng thái</label>
+            <select asp-for="Status" class="form-select">
+                <option>Active</option>
+                <option>Closed</option>
+                <option>Paused</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+        <a asp-page="Details" asp-route-id="@Model.Budget.BudgetId" class="btn btn-link">Hủy</a>
+    </form>
+}

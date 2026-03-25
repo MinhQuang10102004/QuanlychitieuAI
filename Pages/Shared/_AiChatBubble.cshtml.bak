@@ -1,0 +1,138 @@
+@using Microsoft.AspNetCore.Http
+@{
+    var userId = Context.Session.GetInt32("UserId");
+}
+@if (userId != null)
+{
+    <div id="ai-chat-bubble" style="position:fixed;right:20px;bottom:20px;z-index:1050;">
+        <div id="ai-bubble-button" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width:56px;height:56px;box-shadow:0 4px 12px rgba(0,0,0,0.15);cursor:pointer;font-size:24px;user-select:none;">🤖</div>
+
+        <div id="ai-chat-box" class="card" style="width:320px;max-width:90vw;display:none;box-shadow:0 8px 30px rgba(0,0,0,0.2);border:1px solid #dee2e6;">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                <strong>Trợ lý AI</strong>
+                <div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="ai-export" title="Export chat" style="padding:0.25rem 0.5rem;">📥</button>
+                    <button type="button" class="btn-close ms-2" aria-label="Close" id="ai-close"></button>
+                </div>
+            </div>
+            <div class="card-body" style="max-height:360px;overflow-y:auto;min-height:200px;">
+                <div id="ai-messages" style="display:flex;flex-direction:column;gap:8px;"></div>
+            </div>
+            <div class="card-footer bg-light">
+                <div class="input-group input-group-sm">
+                    <input id="ai-input" class="form-control" placeholder="Hỏi tôi về chi tiêu, ngân sách..." />
+                    <button id="ai-send" class="btn btn-primary" type="button">Gửi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #ai-messages { font-size:0.9rem; }
+        #ai-messages .msg { padding:8px 10px;border-radius:12px;word-wrap:break-word;line-height:1.4; }
+        #ai-messages .from-user { align-self:flex-end; background:#0d6efd;color:white;max-width:80%;text-align:right; }
+        #ai-messages .from-ai { align-self:flex-start; background:#f1f3f5;color:#111;max-width:80%;position:relative; }
+        #ai-messages .from-ai:hover::after { content:"📋"; position:absolute;top:2px;right:6px;cursor:pointer;opacity:0.6; }
+        #ai-messages .msg code { background:#e9ecef;padding:2px 4px;border-radius:3px;font-family:monospace;font-size:0.85em; }
+        #ai-messages .msg strong { font-weight:600; }
+        #ai-messages .msg em { font-style:italic; }
+        .ai-loading { display:inline-flex;gap:4px;align-items:center; }
+        .ai-loading span { width:6px;height:6px;border-radius:50%;background:#666;animation:bounce 1.4s infinite; }
+        .ai-loading span:nth-child(2) { animation-delay:0.2s; }
+        .ai-loading span:nth-child(3) { animation-delay:0.4s; }
+        @@keyframes bounce { 0%,80%,100% { opacity:0.3; } 40% { opacity:1; } }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        (function(){
+            @using Microsoft.AspNetCore.Http
+            @{
+                var userId = Context.Session.GetInt32("UserId");
+            }
+            @if (userId != null)
+            {
+                <div id="ai-chat-root">
+                    <button id="ai-open-btn" class="btn btn-dark" title="Mở trợ lý AI">🤖</button>
+
+                    <div id="ai-panel" class="ai-panel" style="display:none;">
+                        <div class="ai-panel-header">
+                            <div class="ai-title">Trợ lý AI</div>
+                            <div class="ai-actions">
+                                <button id="ai-export" class="btn btn-sm btn-outline-secondary me-2">Export</button>
+                                <button id="ai-close" class="btn btn-sm btn-outline-secondary">Đóng</button>
+                            </div>
+                        </div>
+
+                        <div id="ai-conversation" class="ai-conversation"></div>
+
+                        <div class="ai-input-area">
+                            <textarea id="ai-input" class="form-control" rows="1" placeholder="Hỏi tôi về chi tiêu, ngân sách... (Shift+Enter xuống dòng)"></textarea>
+                            <div class="ai-input-actions">
+                                <button id="ai-send" class="btn btn-primary">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+                <style>
+                    #ai-open-btn { position:fixed; right:20px; bottom:20px; width:56px; height:56px; border-radius:28px; z-index:2000; }
+                    .ai-panel { position:fixed; right:20px; bottom:90px; width:720px; max-width:95vw; height:80vh; background:#0f1720; color:#e6edf3; border-radius:12px; box-shadow:0 12px 40px rgba(2,6,23,0.6); display:flex; flex-direction:column; z-index:2000; }
+                    .ai-panel-header { padding:12px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,0.04); }
+                    .ai-title { font-weight:600; }
+                    .ai-conversation { padding:16px; overflow:auto; flex:1 1 auto; display:flex; flex-direction:column; gap:12px; }
+                    .ai-msg { max-width:78%; padding:12px 14px; border-radius:12px; line-height:1.45; }
+                    .ai-msg.user { align-self:flex-end; background:linear-gradient(90deg,#4f46e5,#0ea5e9); color:white; text-align:right; }
+                    .ai-msg.bot { align-self:flex-start; background:rgba(255,255,255,0.04); color:#e6edf3; }
+                    .ai-msg .ts { display:block; font-size:0.72rem; opacity:0.6; margin-top:6px; }
+                    .ai-input-area { padding:12px; border-top:1px solid rgba(255,255,255,0.03); display:flex; gap:8px; align-items:flex-end; }
+                    #ai-input { resize:none; background:transparent; color:inherit; border:1px solid rgba(255,255,255,0.04); border-radius:8px; padding:8px; flex:1 1 auto; }
+                    .ai-input-actions { width:96px; display:flex; justify-content:flex-end; }
+                    .ai-empty { color:rgba(255,255,255,0.5); text-align:center; margin-top:40px; }
+                    .ai-loading-dots { display:inline-flex; gap:6px; }
+                    .ai-loading-dots span { width:8px; height:8px; border-radius:4px; background:#9ca3af; animation:dot 1s infinite; }
+                    .ai-loading-dots span:nth-child(2){ animation-delay:0.15s } .ai-loading-dots span:nth-child(3){ animation-delay:0.3s }
+                    @@keyframes dot { 0%{opacity:0.3}50%{opacity:1}100%{opacity:0.3} }
+                </style>
+
+                <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+                <script>
+                    (function(){
+                        const openBtn = document.getElementById('ai-open-btn');
+                        const panel = document.getElementById('ai-panel');
+                        const closeBtn = document.getElementById('ai-close');
+                        const conv = document.getElementById('ai-conversation');
+                        const input = document.getElementById('ai-input');
+                        const sendBtn = document.getElementById('ai-send');
+                        const exportBtn = document.getElementById('ai-export');
+
+                        function formatTs(iso){ try{ const d = new Date(iso); return d.toLocaleString(); } catch { return iso; } }
+                        function el(tag, cls, html){ const e = document.createElement(tag); if(cls) e.className = cls; if(html) e.innerHTML = html; return e; }
+
+                        function renderMessage(msg, who){
+                            const wrapper = el('div', 'ai-msg ' + (who==='user' ? 'user' : 'bot'));
+                            if(who==='bot') wrapper.innerHTML = marked.parse(msg.text || ''); else wrapper.textContent = msg.text || '';
+                            const ts = el('span','ts', formatTs(msg.createdAt)); wrapper.appendChild(ts);
+                            conv.appendChild(wrapper); conv.scrollTop = conv.scrollHeight;
+                        }
+
+                        function showLoading(){ const d = el('div','ai-msg bot'); d.innerHTML = '<span class="ai-loading-dots"><span></span><span></span><span></span></span>'; conv.appendChild(d); conv.scrollTop = conv.scrollHeight; return d; }
+
+                        async function loadHistory(){ conv.innerHTML = ''; try{ const res = await fetch('/ai/history'); if(!res.ok) return conv.appendChild(el('div','ai-empty','Không thể tải lịch sử.')); const items = await res.json(); if(!items || items.length===0){ conv.appendChild(el('div','ai-empty','Bắt đầu một cuộc trò chuyện mới với trợ lý AI.')); return;} items.forEach(it => { if(it.UserMessage) renderMessage({ text: it.UserMessage, createdAt: it.CreatedAt }, 'user'); if(it.AiReply) renderMessage({ text: it.AiReply, createdAt: it.CreatedAt }, 'bot'); }); }catch(e){ conv.appendChild(el('div','ai-empty','Lỗi tải lịch sử.')); } }
+
+                        openBtn.addEventListener('click', async function(){ panel.style.display='flex'; openBtn.style.display='none'; await loadHistory(); input.focus(); });
+                        closeBtn.addEventListener('click', function(){ panel.style.display='none'; openBtn.style.display='block'; });
+
+                        sendBtn.addEventListener('click', sendMessage);
+                        input.addEventListener('keydown', function(e){ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
+
+                        let pending = false;
+                        async function sendMessage(){ if(pending) return; const txt = (input.value||'').trim(); if(!txt) return; renderMessage({ text: txt, createdAt: new Date().toISOString() }, 'user'); input.value = ''; pending = true; const loader = showLoading(); try{ const res = await fetch('/ai/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: txt }) }); if(!res.ok){ const err = await res.text(); throw new Error(err || 'Lỗi'); } const data = await res.json(); loader.remove(); renderMessage({ text: data.reply || 'Không có phản hồi.', createdAt: new Date().toISOString() }, 'bot'); }catch(err){ loader.remove(); renderMessage({ text: 'Lỗi: ' + (err.message||err), createdAt: new Date().toISOString() }, 'bot'); } finally{ pending = false; } }
+
+                        exportBtn.addEventListener('click', function(){ let text=''; const nodes = conv.querySelectorAll('.ai-msg'); nodes.forEach(n =>{ const who = n.classList.contains('user') ? 'You' : 'AI'; text += who + ': ' + n.textContent.replace(/\n+/g,' ') + '\n'; }); const blob = new Blob([text], { type:'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'chat_' + new Date().toISOString().slice(0,10) + '.txt'; a.click(); URL.revokeObjectURL(url); });
+
+                        conv.addEventListener('click', function(e){ const m = e.target.closest('.ai-msg.bot'); if(m){ navigator.clipboard.writeText(m.textContent || ''); } });
+                    })();
+                </script>
+            }

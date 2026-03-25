@@ -1,0 +1,29 @@
+@page
+@model QuanLyChiTieu.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "Người dùng";
+}
+
+<h1 class="h3 mb-3">Danh sách người dùng</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Số giao dịch</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.HoTen</td>
+                <td>@user.Email</td>
+                <td>@user.TransactionCount</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

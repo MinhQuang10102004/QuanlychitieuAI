@@ -1,0 +1,23 @@
+@page
+@model QuanLyChiTieu.Pages.Households.IndexModel
+@{
+    ViewData["Title"] = "Quản lý Hộ gia đình";
+}
+
+<h1 class="h3 mb-4">Hộ gia đình</h1>
+
+@if (Model.CurrentHousehold == null)
+{
+    <div class="alert alert-secondary">Bạn chưa tham gia hộ gia đình nào.</div>
+    <a asp-page="Create" class="btn btn-primary">Tạo hộ gia đình</a>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@Model.CurrentHousehold.TenHoGiaDinh</h5>
+            <p class="card-text">Chủ hộ: @(Model.CurrentHousehold.ChuHo?.HoTen ?? "Không rõ")</p>
+            <p class="card-text">Chủ hộ: @(Model.CurrentHousehold.ChuHo?.HoTen ?? "Không rõ") (@(Model.CurrentHousehold.ChuHo?.Email ?? ""))</p>
+        </div>
+    </div>
+}

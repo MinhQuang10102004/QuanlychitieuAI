@@ -1,0 +1,82 @@
+@page
+@model QuanLyChiTieu.Pages.Statistics.IndexModel
+@{
+    ViewData["Title"] = "Thống kê";
+}
+
+<h1 class="h3 mb-4">Thống kê tổng quan</h1>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card text-bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Tổng chi tiêu</h5>
+                <p class="display-6">@Model.TotalExpense.ToString("N0") đ</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Số giao dịch</h5>
+                <p class="display-6">@Model.TotalTransactions</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-secondary">
+            <div class="card-body">
+                <h5 class="card-title">Danh mục nổi bật</h5>
+                <p class="h4 mb-0">@Model.TopCategory</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="mt-4">
+    <h2 class="h5">Chi tiêu theo danh mục</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Danh mục</th>
+                    <th class="text-end">Tổng tiền</th>
+                    <th class="text-end">Số giao dịch</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.CategoryBreakdown)
+            {
+                <tr>
+                    <td>@item.CategoryName</td>
+                    <td class="text-end">@item.TotalAmount.ToString("N0") đ</td>
+                    <td class="text-end">@item.TransactionCount</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="mt-4">
+    <h2 class="h5">Chi tiêu 6 tháng gần nhất</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tháng</th>
+                    <th class="text-end">Tổng tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var month in Model.MonthlySummaries)
+            {
+                <tr>
+                    <td>@month.Label</td>
+                    <td class="text-end">@month.TotalAmount.ToString("N0") đ</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

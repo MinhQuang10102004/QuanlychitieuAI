@@ -1,0 +1,33 @@
+@using Microsoft.AspNetCore.Http
+@{
+    var userId = Context.Session.GetInt32("UserId");
+}
+@if (userId != null)
+{
+    <div data-ai-chat-root>
+        <button id="ai-open-btn" class="btn btn-dark" title="Mở trợ lý AI">🤖</button>
+
+        <div id="ai-panel" class="ai-panel" style="display:none;">
+            <div class="ai-panel-header">
+                <div class="ai-title">Trợ lý AI</div>
+                <div class="ai-actions">
+                    <button id="ai-export" class="btn btn-sm btn-outline-secondary me-2">Export</button>
+                    <button id="ai-close" class="btn btn-sm btn-outline-secondary">Đóng</button>
+                </div>
+            </div>
+
+            <div id="ai-conversation" class="ai-conversation"></div>
+
+            <div class="ai-input-area">
+                <textarea id="ai-input" class="form-control" rows="1" placeholder="Hỏi tôi về chi tiêu, ngân sách... (Shift+Enter xuống dòng)"></textarea>
+                <div class="ai-input-actions">
+                    <button id="ai-send" class="btn btn-primary">Gửi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="~/css/ai-chat.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="~/js/ai-chat.js"></script>
+}

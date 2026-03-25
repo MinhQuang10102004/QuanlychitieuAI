@@ -1,0 +1,17 @@
+@page "{id:int}"
+@model QuanLyChiTieu.Pages.Categories.DeleteModel
+@{
+    ViewData["Title"] = "Xóa danh mục";
+}
+
+<h1 class="h3 mb-3">Xóa danh mục</h1>
+
+<div class="alert alert-warning">
+    <p>Bạn có chắc chắn muốn xóa danh mục <strong>@Model.DanhMuc?.TenDanhMuc</strong> không?</p>
+</div>
+
+<form method="post">
+    <input type="hidden" asp-for="DanhMuc.MaDanhMuc" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-page="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

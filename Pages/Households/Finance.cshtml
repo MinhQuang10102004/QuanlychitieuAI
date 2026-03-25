@@ -1,0 +1,33 @@
+@page
+@model QuanLyChiTieu.Pages.Households.FinanceModel
+@{
+    ViewData["Title"] = "Giao dịch chung hộ";
+}
+
+<h1 class="h3 mb-4">Giao dịch chung của hộ</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Amount" class="form-label">Số tiền (dương=thu, âm=chi)</label>
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Danh mục</label>
+        <input asp-for="CategoryId" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Date" class="form-label">Ngày</label>
+        <input asp-for="Date" type="date" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Mô tả</label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+    <button class="btn btn-primary" type="submit">Ghi nhận</button>
+</form>
+
+@if (Model.CreatedTxnId != null)
+{
+    <div class="alert alert-success mt-3">Giao dịch chung đã được tạo (ID=@Model.CreatedTxnId).</div>
+}

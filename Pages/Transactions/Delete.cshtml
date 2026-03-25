@@ -1,0 +1,16 @@
+@page "{id:int}"
+@model QuanLyChiTieu.Pages.Transactions.DeleteModel
+@{
+    ViewData["Title"] = "Xóa giao dịch";
+}
+
+<h1 class="h3 mb-3">Xóa giao dịch</h1>
+
+<div class="alert alert-warning">
+    <p>Bạn có chắc muốn xóa giao dịch ngày <strong>@Model.Transaction?.NgayGiaoDich.ToString("dd/MM/yyyy")</strong> với số tiền <strong>@Model.Transaction?.SoTien.ToString("N0") đ</strong>?</p>
+</div>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a class="btn btn-secondary" asp-page="Index">Hủy</a>
+</form>
